@@ -18,7 +18,9 @@ import java.util.concurrent.Future;
  */
 public class NuberRegion {
 
-	
+	public NuberDispatch dispatch;
+	public String regionName;
+	public int maxSimultaneousJobs;
 	/**
 	 * Creates a new Nuber region
 	 * 
@@ -27,7 +29,11 @@ public class NuberRegion {
 	 * @param maxSimultaneousJobs The maximum number of simultaneous bookings the region is allowed to process
 	 */
 	public NuberRegion(NuberDispatch dispatch, String regionName, int maxSimultaneousJobs)
-	{}
+	{
+		this.dispatch = dispatch;
+		this.regionName = regionName;
+		this.maxSimultaneousJobs = maxSimultaneousJobs;
+	}
 	
 	/**
 	 * Creates a booking for given passenger, and adds the booking to the 

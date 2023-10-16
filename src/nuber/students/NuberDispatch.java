@@ -9,14 +9,20 @@ import java.util.concurrent.Future;
  * @author james
  *
  */
+import java.util.ArrayList;
 public class NuberDispatch {
 
 	/**
 	 * The maximum number of idle drivers that can be awaiting a booking 
 	 */
-	private final int MAX_DRIVERS = 999;
-	
+	private final int MAX_DRIVERS;
+	//Array of idleDrivers for adding drivers into
+	private ArrayList<Driver> idleDrivers;
+	//regionInfoMap 
+	private HashMap<String, Integer> regionInfo;
+	//boolean for the logging or nonlogging of events, default false.
 	private boolean logEvents = false;
+	
 	
 	/**
 	 * Creates a new dispatch objects and instantiates the required regions and any other objects required.
@@ -27,6 +33,12 @@ public class NuberDispatch {
 	 */
 	public NuberDispatch(HashMap<String, Integer> regionInfo, boolean logEvents)
 	{
+		this.regionInfo = regionInfo;
+		this.logEvents = logEvents;
+		//Max_Drivers is inialised as 999
+		this.MAX_DRIVERS = 999;
+		//idleDrivers is inialised as a Driver Array length of Max_Drivers
+		this.idleDrivers = new ArrayList<Driver>(MAX_DRIVERS);
 	}
 	
 	/**
@@ -39,6 +51,11 @@ public class NuberDispatch {
 	 */
 	public boolean addDriver(Driver newDriver)
 	{
+		if (idleDrivers.contains(newDriver)) 
+			return false;
+		else
+			idleDrivers.add(newDriver);
+			return true;
 	}
 	
 	/**
@@ -50,6 +67,11 @@ public class NuberDispatch {
 	 */
 	public Driver getDriver()
 	{
+		idleDrivers.trimToSize();
+		int last = idleDrivers.size() - 1;
+		Driver driver = idleDrivers.get(last);
+		idleDrivers.remove(last);
+		return driver;
 	}
 
 	/**

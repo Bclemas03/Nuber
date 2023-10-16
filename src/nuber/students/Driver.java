@@ -4,7 +4,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class Driver extends Person {
 
-	
+	private Passenger currentPassenger;
 	public Driver(String driverName, int maxSleep)
 	{
 		super(driverName, maxSleep);
@@ -21,6 +21,7 @@ public class Driver extends Person {
 	{
 		//driveToDestination(newPassenger);
 		try{
+			currentPassenger = newPassenger;
 			//Sleep thread for a time between 0 and maxSleep inclusive (both 0 and the max value are options but no higher or lower)
 			Thread.sleep(ThreadLocalRandom.current().nextInt(-1, maxSleep + 1));
 		}
@@ -35,9 +36,9 @@ public class Driver extends Person {
 	 * 
 	 * @throws InterruptedException
 	 */
-	public void driveToDestination(Passenger passenger) {
+	public void driveToDestination() {
 		try{
-			Thread.sleep(passenger.getTravelTime());
+			Thread.sleep(this.currentPassenger.getTravelTime());
 		}
 		catch (Exception e){
 			System.out.println(e);

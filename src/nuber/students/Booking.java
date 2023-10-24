@@ -1,5 +1,8 @@
 package nuber.students;
 
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
+
 /**
  * 
  * Booking represents the overall "job" for a passenger getting to their destination.
@@ -21,6 +24,11 @@ package nuber.students;
 public class Booking {
 
 		
+	private NuberDispatch dispatch;
+	private Passenger passenger;
+	private Driver driver;
+	private int id;
+	private static int numOfBookings = 0;
 	/**
 	 * Creates a new booking for a given Nuber dispatch and passenger, noting that no
 	 * driver is provided as it will depend on whether one is available when the region 
@@ -31,6 +39,9 @@ public class Booking {
 	 */
 	public Booking(NuberDispatch dispatch, Passenger passenger)
 	{
+		this.dispatch = dispatch;
+		this.passenger = passenger;
+		this.id = ++numOfBookings;
 	}
 	
 	/**
@@ -43,14 +54,32 @@ public class Booking {
 	 * 4.	It must then call the Driver.driveToDestination() function, with the thread pausing 
 	 * 			whilst as function is called.
 	 * 5.	Once at the destination, the time is recorded, so we know the total trip duration. 
-	 * 6.	The driver, now free, is added back into Dispatch’s list of available drivers. 
+	 * 6.	The driver, now free, is added back into Dispatchï¿½s list of available drivers. 
 	 * 7.	The call() function the returns a BookingResult object, passing in the appropriate 
 	 * 			information required in the BookingResult constructor.
 	 *
 	 * @return A BookingResult containing the final information about the booking 
 	 */
 	public BookingResult call() {
+		while (dispatch.idleDrivers.size() < 0){
+			try {
+				Thread.sleep(5000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		driver = dispatch.getDriver();
+		
+		driver.pickUpPassenger(passenger);
+		Date startTime = new Date();
+		driver.driveToDestination();
+		Date endTime = new Date();
+		
+		long diffInMillies = startTime.getTime() - endTime.getTime();
+		long travelTime = TimeUnit.MINUTES.convert(diffInMillies, TimeUnit.MILLISECONDS);
 
+		return new BookingResult(id, passenger, driver, travelTime);
 	}
 	
 	/***
@@ -66,6 +95,7 @@ public class Booking {
 	@Override
 	public String toString()
 	{
+		return id + ": " + driver.name + ": " + passenger.name;
 	}
 
 }

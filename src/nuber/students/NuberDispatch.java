@@ -1,6 +1,8 @@
 package nuber.students;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.concurrent.Future;
 
 /**
@@ -12,16 +14,16 @@ import java.util.concurrent.Future;
 import java.util.ArrayList;
 public class NuberDispatch {
 
-	/**
-	 * The maximum number of idle drivers that can be awaiting a booking 
-	 */
-	private final int MAX_DRIVERS;
+	
 	//Array of idleDrivers for adding drivers into
-	private ArrayList<Driver> idleDrivers;
+	public LinkedList<Driver> idleDrivers;
+	
 	//regionInfoMap 
 	private HashMap<String, Integer> regionInfo;
+	//The maximum number of idle drivers that can be awaiting a booking 
+	private final int MAX_DRIVERS;
 	//boolean for the logging or nonlogging of events, default false.
-	private boolean logEvents = false;
+	private boolean logEvents;
 	
 	
 	/**
@@ -38,7 +40,7 @@ public class NuberDispatch {
 		//Max_Drivers is inialised as 999
 		this.MAX_DRIVERS = 999;
 		//idleDrivers is inialised as a Driver Array length of Max_Drivers
-		this.idleDrivers = new ArrayList<Driver>(MAX_DRIVERS);
+		this.idleDrivers = new LinkedList<Driver>(){};
 	}
 	
 	/**
@@ -67,11 +69,14 @@ public class NuberDispatch {
 	 */
 	public Driver getDriver()
 	{
-		idleDrivers.trimToSize();
-		int last = idleDrivers.size() - 1;
-		Driver driver = idleDrivers.get(last);
-		idleDrivers.remove(last);
-		return driver;
+		if (idleDrivers.size() > 0){
+			Driver driver = idleDrivers.getFirst();
+			idleDrivers.removeFirst();
+			return driver;
+		}
+		else{
+			return null;
+		}
 	}
 
 	/**
@@ -103,6 +108,10 @@ public class NuberDispatch {
 	 */
 	public Future<BookingResult> bookPassenger(Passenger passenger, String region) {
 		
+		if (!region.isShutdown){
+
+		}
+		region.bookPassenger(passenger);
 	}
 
 	/**

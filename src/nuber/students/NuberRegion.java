@@ -1,5 +1,6 @@
 package nuber.students;
 
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -20,12 +21,13 @@ import java.util.Queue;
  */
 public class NuberRegion {
 
-	private NuberDispatch dispatch;
-	private String regionName;
-	private Queue SimultaneousJobs;
-	private int maxSimultaneousJobs;
+	public String regionName;
+	public Queue<Callable<BookingResult>> simultaneousJobs;
 	public boolean isShutdown;
 
+	private NuberDispatch dispatch;
+	private int maxSimultaneousJobs;
+	
 	/**
 	 * Creates a new Nuber region
 	 * 
@@ -54,16 +56,20 @@ public class NuberRegion {
 	 */
 	public Future<BookingResult> bookPassenger(Passenger waitingPassenger)
 	{	
-		Booking booking = new Booking(this.dispatch, waitingPassenger);
-		if (!this.isShutdown){
-			
+		if (!isShutdown && simultaneousJobs.size() <= maxSimultaneousJobs){
+			Callable<BookingResult> booking = new Booking(dispatch, waitingPassenger);
+			simultaneousJobs.add(booking);
 			ExecutorService service = Executors.newSingleThreadExecutor();
 			Future<BookingResult> future = service.submit(booking);
 			return future;
 		}
-		dispatch.logEvent(booking, "Failed to make booking as region is Shutdown.")
-		return null;
-		
+		Booking booking =  new Booking(dispatch, waitingPassenger);
+		if (isShutdown){
+			dispatch.logEvent(booking, "Failed to make booking as region is Shutdown.");
+			return null;
+		}
+		dispatch.logEvent(booking, "Exceeded max simultaneous bookings.");
+			return null;
 	}
 	
 	/**

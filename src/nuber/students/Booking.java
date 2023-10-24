@@ -1,6 +1,8 @@
 package nuber.students;
 
+import java.math.BigInteger;
 import java.util.Date;
+import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -21,7 +23,7 @@ import java.util.concurrent.TimeUnit;
  * @author james
  *
  */
-public class Booking {
+public class Booking implements Callable<BookingResult>{
 
 		
 	private NuberDispatch dispatch;

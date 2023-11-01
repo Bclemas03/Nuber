@@ -2,9 +2,6 @@ package nuber.students;
 
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Queue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 /**
@@ -13,8 +10,6 @@ import java.util.concurrent.Future;
  * @author james
  *
  */
-import java.util.ArrayList;
-import java.util.Map;
 public class NuberDispatch {
 
 	
@@ -22,7 +17,7 @@ public class NuberDispatch {
 	public LinkedList<Driver> idleDrivers;
 
 	//dict of regions stored by string
-	private Map<String, NuberRegion> regionDict;
+	private HashMap<String, NuberRegion> regionDict;
 	//regionInfoMap 
 	private HashMap<String, Integer> regionInfo;
 	//The maximum number of idle drivers that can be awaiting a booking 
@@ -41,6 +36,7 @@ public class NuberDispatch {
 	public NuberDispatch(HashMap<String, Integer> regionInfo, boolean logEvents)
 	{
 		this.regionInfo = regionInfo;
+		this.regionDict = new HashMap<String, NuberRegion>();
 		for (String region :  regionInfo.keySet()){
 			regionDict.putIfAbsent(region, new NuberRegion(this, region, regionInfo.get(region)));
 		}
@@ -63,11 +59,18 @@ public class NuberDispatch {
 	 */
 	public boolean addDriver(Driver newDriver)
 	{
-		if (idleDrivers.contains(newDriver)) 
+		if (idleDrivers.size() < MAX_DRIVERS){
+			if (idleDrivers.contains(newDriver)) {
+				return false;
+			}
+			else {
+				idleDrivers.add(newDriver);
+				return true;
+			}
+		}
+		else {
 			return false;
-		else
-			idleDrivers.add(newDriver);
-			return true;
+		}
 	}
 	
 	/**

@@ -1,6 +1,7 @@
 package nuber.students;
 
 import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -39,6 +40,7 @@ public class NuberRegion {
 	{
 		this.dispatch = dispatch;
 		this.regionName = regionName;
+		this.simultaneousJobs = new ConcurrentLinkedQueue<Callable<BookingResult>>();
 		this.maxSimultaneousJobs = maxSimultaneousJobs;
 		this.isShutdown = false;
 	}
@@ -63,12 +65,11 @@ public class NuberRegion {
 			Future<BookingResult> future = service.submit(booking);
 			return future;
 		}
-		Booking booking =  new Booking(dispatch, waitingPassenger);
 		if (isShutdown){
-			dispatch.logEvent(booking, "Failed to make booking as region is Shutdown.");
+			dispatch.logEvent(null, "Failed to make booking as region is Shutdown.");
 			return null;
 		}
-		dispatch.logEvent(booking, "Exceeded max simultaneous bookings.");
+		dispatch.logEvent(null, "Exceeded max simultaneous bookings.");
 			return null;
 	}
 	

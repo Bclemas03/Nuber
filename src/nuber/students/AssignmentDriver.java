@@ -1,6 +1,7 @@
 package nuber.students;
 
 import java.util.HashMap;
+import java.util.concurrent.Future;
 
 public class AssignmentDriver {
 
@@ -13,7 +14,6 @@ public class AssignmentDriver {
 		
 		HashMap<String, Integer> testRegions = new HashMap<String, Integer>();
 		testRegions.put("Test Region", 50);
-		
 
 		
 		/**
@@ -22,7 +22,6 @@ public class AssignmentDriver {
 		 */
 
 		Passenger testPassenger = new Passenger("Alex", 100);
-
 		Driver testDriver = new Driver("Barbara", 100);
 		try {
 			//should store the passenger, and then sleep the thread for as long as the driver's random timeout takes
@@ -36,22 +35,32 @@ public class AssignmentDriver {
 		
 		//test creating a dispatch object
 		NuberDispatch dispatch = new NuberDispatch(testRegions, logEvents);
+
+		dispatch.logEvent(null, "Dispatch Created");
 		
 		//create two new bookings
 		Booking b1 = new Booking(dispatch, testPassenger);
 		Booking b2 = new Booking(dispatch, testPassenger);
 		
+		dispatch.logEvent(null, "Booking 1 Created");
+		dispatch.logEvent(null, "Booking 2 Created");
+
 		//test creating a new region
 		NuberRegion region = new NuberRegion(dispatch, "Test Region", 10);
-
+		dispatch.logEvent(null, "Region Created");
+		
 		//test adding a driver to dispatch
 		dispatch.addDriver(testDriver);
+		dispatch.logEvent(null, "Driver Created");
 		
 		//test booking a single passenger
-		dispatch.bookPassenger(testPassenger, "Test Region");
+		Future<BookingResult> testb = dispatch.bookPassenger(testPassenger, "Test Region");
+		dispatch.logEvent(null, "Booking TestPassenger");
 
 		//shutdown the dispatch when it's done
+		dispatch.logEvent(null, "SHUTTING DOWN");
 		dispatch.shutdown();
+		dispatch.logEvent(null, "TESTING COMPLETE");
 
 		
 		
@@ -64,11 +73,11 @@ public class AssignmentDriver {
 		regions.put("North", 50);
 		regions.put("South", 50);
 		
-		//new Simulation(regions, 1, 10, 1000, logEvents);
-		//new Simulation(regions, 5, 10, 1000, logEvents);
-		//new Simulation(regions, 10, 10, 1000, logEvents);
-		//new Simulation(regions, 10, 100, 1000, logEvents);
-		//new Simulation(regions, 1, 50, 1000, logEvents);
+		new Simulation(regions, 1, 10, 1000, logEvents);
+		new Simulation(regions, 5, 10, 1000, logEvents);
+		new Simulation(regions, 10, 10, 1000, logEvents);
+		new Simulation(regions, 10, 100, 1000, logEvents);
+		new Simulation(regions, 1, 50, 1000, logEvents);
 	}
 
 }

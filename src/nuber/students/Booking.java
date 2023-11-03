@@ -61,7 +61,7 @@ public class Booking implements Callable<BookingResult>{
 	 * @return A BookingResult containing the final information about the booking 
 	 */
 	public BookingResult call() {
-		dispatch.logEvent(null, this.passenger.name + " Is awaiting a driver...");
+		dispatch.logEvent(null, " Is awaiting a driver...");
 		NuberRegion region = this.dispatch.regionDict.get(this.passenger.region);
 		while (dispatch.idleDrivers.size() <= 0){
 			try {
@@ -73,19 +73,19 @@ public class Booking implements Callable<BookingResult>{
 		}
 		this.driver = dispatch.getDriver();
 		region.waitingJobs.remove(this);
-		dispatch.logEvent(this, this.passenger.name + " Is has been assigned driver " + this.driver.name);
+		dispatch.logEvent(this, " Is has been assigned driver " + this.driver.name);
 		
 
-		dispatch.logEvent(this, this.passenger.name + " Is being picked up");
+		dispatch.logEvent(this, " Is being picked up");
 		driver.pickUpPassenger(passenger);
 		Date startTime = new Date();
 
-		dispatch.logEvent(this, this.passenger.name + " Is being dropped off");
+		dispatch.logEvent(this, " Is being dropped off");
 		driver.driveToDestination();
 		Date endTime = new Date();
 		
 		long travelTime = endTime.getTime() - startTime.getTime();
-		dispatch.logEvent(this, this.passenger.name + " trip took " + travelTime + " milliseconds");
+		dispatch.logEvent(this, " trip took " + travelTime + " milliseconds");
 
 		dispatch.addDriver(driver);
 		region.simultaneousJobs.remove(this);

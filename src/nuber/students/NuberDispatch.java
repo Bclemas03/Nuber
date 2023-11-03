@@ -140,10 +140,7 @@ public class NuberDispatch {
 	{
 		int numWaiting = 0;
 		for (NuberRegion region : regionDict.values()){
-			numWaiting += region.simultaneousJobs.size();
-			// for (Callable<BookingResult> bookingCallable : region.simultaneousJobs){
-				
-			// }
+			numWaiting += region.waitingJobs.size();
 		}
 		return numWaiting;
 	}

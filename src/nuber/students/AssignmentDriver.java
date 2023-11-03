@@ -74,14 +74,14 @@ public class AssignmentDriver {
 		regions.put("South", 50);
 
 		//Simulation Tester: Simulation Zero
-		new Simulation(regions, 1, 2, 1000, logEvents);
-		dispatch.logEvent(null, "SIMULATION ZERO");
+		//new Simulation(regions, 1, 2, 1000, logEvents);
+		//dispatch.logEvent(null, "SIMULATION ZERO");
 
 		// new Simulation(regions, 1, 10, 1000, logEvents);
 		// dispatch.logEvent(null, "SIMULATION ONE");
 
-		// new Simulation(regions, 5, 10, 1000, logEvents);
-		// dispatch.logEvent(null, "SIMULATION TWO");
+		new Simulation(regions, 5, 10, 1000, logEvents);
+		dispatch.logEvent(null, "SIMULATION TWO");
 
 		// new Simulation(regions, 10, 10, 1000, logEvents);
 		// dispatch.logEvent(null, "SIMULATION THREE");

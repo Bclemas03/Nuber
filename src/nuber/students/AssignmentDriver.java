@@ -63,7 +63,7 @@ public class AssignmentDriver {
 		dispatch.logEvent(null, "TESTING COMPLETE");
 
 		
-		
+		Thread.sleep(2000);
 		
 		
 		//create NuberDispatch for given regions and max simultaneous jobs per region
@@ -72,12 +72,25 @@ public class AssignmentDriver {
 		HashMap<String, Integer> regions = new HashMap<String, Integer>();
 		regions.put("North", 50);
 		regions.put("South", 50);
+
+		//Simulation Tester: Simulation Zero
+		new Simulation(regions, 1, 2, 1000, logEvents);
+		dispatch.logEvent(null, "SIMULATION ZERO");
+
+		// new Simulation(regions, 1, 10, 1000, logEvents);
+		// dispatch.logEvent(null, "SIMULATION ONE");
+
+		// new Simulation(regions, 5, 10, 1000, logEvents);
+		// dispatch.logEvent(null, "SIMULATION TWO");
+
+		// new Simulation(regions, 10, 10, 1000, logEvents);
+		// dispatch.logEvent(null, "SIMULATION THREE");
+
+		// new Simulation(regions, 10, 100, 1000, logEvents);
+		// dispatch.logEvent(null, "SIMULATION FOUR");
 		
-		new Simulation(regions, 1, 10, 1000, logEvents);
-		new Simulation(regions, 5, 10, 1000, logEvents);
-		new Simulation(regions, 10, 10, 1000, logEvents);
-		new Simulation(regions, 10, 100, 1000, logEvents);
-		new Simulation(regions, 1, 50, 1000, logEvents);
+		// new Simulation(regions, 1, 50, 1000, logEvents);
+		// dispatch.logEvent(null, "SIMULATION FIVE");
 	}
 
 }

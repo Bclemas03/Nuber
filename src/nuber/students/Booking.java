@@ -24,10 +24,9 @@ import java.util.concurrent.TimeUnit;
  */
 public class Booking implements Callable<BookingResult>{
 
-		
+	public Driver driver;	
 	private NuberDispatch dispatch;
 	private Passenger passenger;
-	private Driver driver;
 	private int id;
 	private static int numOfBookings = 0;
 	/**
@@ -62,7 +61,9 @@ public class Booking implements Callable<BookingResult>{
 	 * @return A BookingResult containing the final information about the booking 
 	 */
 	public BookingResult call() {
-		while (dispatch.idleDrivers.size() < 0){
+		dispatch.logEvent(null, this.passenger.name + " Is awaiting a driver...");
+		NuberRegion region = this.dispatch.regionDict.get(this.passenger.region);
+		while (dispatch.idleDrivers.size() <= 0){
 			try {
 				Thread.sleep(5000);
 			} catch (InterruptedException e) {
@@ -70,16 +71,24 @@ public class Booking implements Callable<BookingResult>{
 				e.printStackTrace();
 			}
 		}
-		driver = dispatch.getDriver();
+		this.driver = dispatch.getDriver();
+		region.waitingJobs.remove(this);
+		dispatch.logEvent(this, this.passenger.name + " Is has been assigned driver " + this.driver.name);
 		
+
+		dispatch.logEvent(this, this.passenger.name + " Is being picked up");
 		driver.pickUpPassenger(passenger);
 		Date startTime = new Date();
+
+		dispatch.logEvent(this, this.passenger.name + " Is being dropped off");
 		driver.driveToDestination();
 		Date endTime = new Date();
 		
-		long diffInMillies = startTime.getTime() - endTime.getTime();
-		long travelTime = TimeUnit.MINUTES.convert(diffInMillies, TimeUnit.MILLISECONDS);
+		long travelTime = endTime.getTime() - startTime.getTime();
+		dispatch.logEvent(this, this.passenger.name + " trip took " + travelTime + " milliseconds");
 
+		dispatch.addDriver(driver);
+		region.simultaneousJobs.remove(this);
 		return new BookingResult(id, passenger, driver, travelTime);
 	}
 	
@@ -96,7 +105,14 @@ public class Booking implements Callable<BookingResult>{
 	@Override
 	public String toString()
 	{
-		return id + ": " + driver.name + ": " + passenger.name;
+		try{
+			return id + ": " + driver.name + ": " + passenger.name;
+		}
+		catch(Exception e){
+			System.out.println(e);
+			return "";
+		}
+		
 	}
 
 }

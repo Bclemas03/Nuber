@@ -2,6 +2,7 @@ package nuber.students;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
 /**
@@ -17,7 +18,7 @@ public class NuberDispatch {
 	public LinkedList<Driver> idleDrivers;
 
 	//dict of regions stored by string
-	private HashMap<String, NuberRegion> regionDict;
+	public HashMap<String, NuberRegion> regionDict;
 	//regionInfoMap 
 	private HashMap<String, Integer> regionInfo;
 	//The maximum number of idle drivers that can be awaiting a booking 
@@ -59,7 +60,7 @@ public class NuberDispatch {
 	 */
 	public boolean addDriver(Driver newDriver)
 	{
-		if (idleDrivers.size() < MAX_DRIVERS){
+		if (idleDrivers.size() <= MAX_DRIVERS){
 			if (idleDrivers.contains(newDriver)) {
 				return false;
 			}
@@ -120,6 +121,7 @@ public class NuberDispatch {
 	 * @return returns a Future<BookingResult> object
 	 */
 	public Future<BookingResult> bookPassenger(Passenger passenger, String region) {
+		passenger.addRegion(region);
 		NuberRegion NRegion = regionDict.get(region);
 		if (!NRegion.isShutdown){
 			return NRegion.bookPassenger(passenger);
@@ -139,6 +141,9 @@ public class NuberDispatch {
 		int numWaiting = 0;
 		for (NuberRegion region : regionDict.values()){
 			numWaiting += region.simultaneousJobs.size();
+			// for (Callable<BookingResult> bookingCallable : region.simultaneousJobs){
+				
+			// }
 		}
 		return numWaiting;
 	}

@@ -23,6 +23,7 @@ import java.util.Queue;
 public class NuberRegion {
 
 	public String regionName;
+	public Queue<Callable<BookingResult>> waitingJobs;
 	public Queue<Callable<BookingResult>> simultaneousJobs;
 	public boolean isShutdown;
 
@@ -40,6 +41,7 @@ public class NuberRegion {
 	{
 		this.dispatch = dispatch;
 		this.regionName = regionName;
+		this.waitingJobs = new ConcurrentLinkedQueue<Callable<BookingResult>>();
 		this.simultaneousJobs = new ConcurrentLinkedQueue<Callable<BookingResult>>();
 		this.maxSimultaneousJobs = maxSimultaneousJobs;
 		this.isShutdown = false;
@@ -61,6 +63,7 @@ public class NuberRegion {
 		if (!isShutdown && simultaneousJobs.size() <= maxSimultaneousJobs){
 			Callable<BookingResult> booking = new Booking(dispatch, waitingPassenger);
 			simultaneousJobs.add(booking);
+			waitingJobs.add(booking);
 			ExecutorService service = Executors.newSingleThreadExecutor();
 			Future<BookingResult> future = service.submit(booking);
 			return future;

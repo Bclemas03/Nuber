@@ -121,11 +121,19 @@ public class NuberDispatch {
 	 * @return returns a Future<BookingResult> object
 	 */
 	public Future<BookingResult> bookPassenger(Passenger passenger, String region) {
-		passenger.addRegion(region);
-		NuberRegion NRegion = regionDict.get(region);
-		if (!NRegion.isShutdown){
-			return NRegion.bookPassenger(passenger);
+		try{
+			passenger.addRegion(region);
+			NuberRegion NRegion = regionDict.get(region);
+			if (!NRegion.isShutdown){
+				return NRegion.bookPassenger(passenger);
+			}
 		}
+		catch(Exception e){
+			System.out.println("Invalid region selected for booking, add region first, or use valid region.\nError: ");
+			System.out.print(e);
+			return null;
+		}
+		System.out.println(" can't book, " + region + " is shutdown");
 		return null;
 	}
 

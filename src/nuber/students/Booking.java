@@ -61,7 +61,7 @@ public class Booking implements Callable<BookingResult>{
 	 * @return A BookingResult containing the final information about the booking 
 	 */
 	public BookingResult call() {
-		dispatch.logEvent(null, " Is awaiting a driver...");
+		dispatch.logEvent(null, passenger.name + " Is awaiting a driver...");
 		NuberRegion region = this.dispatch.regionDict.get(this.passenger.region);
 		while (dispatch.idleDrivers.size() <= 0){
 			try {

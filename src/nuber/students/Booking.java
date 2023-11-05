@@ -64,7 +64,7 @@ public class Booking implements Callable<BookingResult>{
 		NuberRegion region = this.dispatch.regionDict.get(this.passenger.region);
 		while (dispatch.idleDrivers.size() <= 0){
 			try {
-				Thread.sleep(100);
+				Thread.sleep(250);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -82,11 +82,11 @@ public class Booking implements Callable<BookingResult>{
 		dispatch.logEvent(this, "has been dropped off");
 		Date endTime = new Date();
 		
-		region.simultaneousJobs.remove(this);
-		dispatch.addDriver(driver);
 		long travelTime = endTime.getTime() - startTime.getTime();
 		dispatch.logEvent(this, "trip took " + travelTime + " milliseconds");
 		
+		region.simultaneousJobs.remove(this);
+		dispatch.addDriver(driver);
 		return new BookingResult(id, passenger, driver, travelTime);
 	}
 	

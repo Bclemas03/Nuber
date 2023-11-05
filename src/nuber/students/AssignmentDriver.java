@@ -91,6 +91,7 @@ public class AssignmentDriver {
 		
 		// new Simulation(regions, 1, 50, 1000, logEvents);
 		// dispatch.logEvent(null, "SIMULATION FIVE");
+		System.exit(0);
 	}
 
 }

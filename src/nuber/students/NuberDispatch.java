@@ -81,7 +81,7 @@ public class NuberDispatch {
 	 * 
 	 * @return A driver that has been removed from the queue
 	 */
-	public Driver getDriver()
+	public synchronized Driver getDriver()
 	{
 		if (idleDrivers.size() > 0){
 			Driver driver = idleDrivers.getFirst();
@@ -133,7 +133,7 @@ public class NuberDispatch {
 			System.out.print(e);
 			return null;
 		}
-		System.out.println(" can't book, " + region + " is shutdown");
+		System.out.println("can't book, " + passenger.name + " because " + region + " is shutdown");
 		return null;
 	}
 

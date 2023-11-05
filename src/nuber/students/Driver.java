@@ -9,7 +9,8 @@ public class Driver extends Person {
 	{
 		super(driverName, maxSleep);
 	}
-	
+
+	//Driver methods don't require synchronization, as no same Driver object is visible to more than one thread simultaneously
 	/**
 	 * Stores the provided passenger as the driver's current passenger and then
 	 * sleeps the thread for between 0-maxDelay milliseconds.

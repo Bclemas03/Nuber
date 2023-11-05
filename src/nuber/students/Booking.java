@@ -61,11 +61,11 @@ public class Booking implements Callable<BookingResult>{
 	 * @return A BookingResult containing the final information about the booking 
 	 */
 	public BookingResult call() {
-		dispatch.logEvent(null, passenger.name + " Is awaiting a driver...");
+		dispatch.logEvent(null, passenger.name + "is awaiting a driver...");
 		NuberRegion region = this.dispatch.regionDict.get(this.passenger.region);
 		while (dispatch.idleDrivers.size() <= 0){
 			try {
-				Thread.sleep(5000);
+				Thread.sleep(100);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -73,22 +73,21 @@ public class Booking implements Callable<BookingResult>{
 		}
 		this.driver = dispatch.getDriver();
 		region.waitingJobs.remove(this);
-		dispatch.logEvent(this, " Is has been assigned driver " + this.driver.name);
+		dispatch.logEvent(this, "has been assigned driver " + this.driver.name);
 		
-
-		dispatch.logEvent(this, " Is being picked up");
 		driver.pickUpPassenger(passenger);
+		dispatch.logEvent(this, "has been picked up");
 		Date startTime = new Date();
 
-		dispatch.logEvent(this, " Is being dropped off");
 		driver.driveToDestination();
+		dispatch.logEvent(this, "has been dropped off");
 		Date endTime = new Date();
 		
-		long travelTime = endTime.getTime() - startTime.getTime();
-		dispatch.logEvent(this, " trip took " + travelTime + " milliseconds");
-
-		dispatch.addDriver(driver);
 		region.simultaneousJobs.remove(this);
+		dispatch.addDriver(driver);
+		long travelTime = endTime.getTime() - startTime.getTime();
+		dispatch.logEvent(this, "trip took " + travelTime + " milliseconds");
+		
 		return new BookingResult(id, passenger, driver, travelTime);
 	}
 	

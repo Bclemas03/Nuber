@@ -2,7 +2,6 @@ package nuber.students;
 
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
 /**
@@ -19,8 +18,7 @@ public class NuberDispatch {
 
 	//dict of regions stored by string
 	public HashMap<String, NuberRegion> regionDict;
-	//regionInfoMap 
-	private HashMap<String, Integer> regionInfo;
+
 	//The maximum number of idle drivers that can be awaiting a booking 
 	private final int MAX_DRIVERS;
 	//boolean for the logging or nonlogging of events, default false.
@@ -36,7 +34,6 @@ public class NuberDispatch {
 	 */
 	public NuberDispatch(HashMap<String, Integer> regionInfo, boolean logEvents)
 	{
-		this.regionInfo = regionInfo;
 		this.regionDict = new HashMap<String, NuberRegion>();
 		for (String region :  regionInfo.keySet()){
 			regionDict.putIfAbsent(region, new NuberRegion(this, region, regionInfo.get(region)));
